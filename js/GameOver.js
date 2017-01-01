@@ -11,8 +11,8 @@ BallsBalls.GameOver.prototype = {
         t.anchor.set(0.5);
     },
     update: function(){
-        if (this.game.input.activePointer.justPressed()) {
-            BallsBalls.game.state.start('Game');
+        if (this.game.spaceKey.isDown) {
+            BallsBalls.game.state.start('MainMenu');
         }
     }
 };
