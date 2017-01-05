@@ -10,7 +10,7 @@ BallsBalls.Preload.prototype = {
 
         //load game assets
         this.load.image('ball', 'assets/ball.png');
-        this.load.image('player', 'assets/player.png');
+        this.load.spritesheet('player', 'assets/player.png', 20, 20);
     },
     create: function(){
         BallsBalls.game.state.start('MainMenu');

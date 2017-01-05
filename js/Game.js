@@ -7,6 +7,8 @@ BallsBalls.Game.prototype = {
         this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
         this.player.enableBody = true;
         this.player.collideWorldBounds = true;
+        this.player.animations.add('default', [0], 10, true)
+        this.player.animations.add('shield', [1], 10, true)
 
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.immovable = true;
@@ -17,6 +19,7 @@ BallsBalls.Game.prototype = {
 
         //Enable cursor keys so we can create some controls
         cursors = this.game.input.keyboard.createCursorKeys();
+        this.game.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
         this.ballsInGame = 0;
         this.worldBounces = 0;
@@ -26,7 +29,9 @@ BallsBalls.Game.prototype = {
     },
     update: function(){
         // Collission between balls and player.
-        this.game.physics.arcade.collide(this.balls, this.player, this.gameOver);
+        this.game.physics.arcade.collide(this.balls, this.player, this.ballPlayerCollision, null, {this:this, game:this.game});
+
+        this.player.animations.play('default');
 
         if (cursors.up.isDown) {
             this.player.y -= 4;
@@ -39,6 +44,9 @@ BallsBalls.Game.prototype = {
         }
         if (cursors.right.isDown) {
             this.player.x += 4;
+        }
+        if (this.game.spaceKey.isDown) {
+            this.player.animations.play('shield');
         }
     },
     addBall: function(x,y) {
@@ -65,8 +73,10 @@ BallsBalls.Game.prototype = {
             this.addBall(object.world.x, object.world.y);
         }
     },
-    gameOver: function(){
-        BallsBalls.game.state.start('GameOver');
+    ballPlayerCollision: function() {
+        if (!this.game.spaceKey.isDown) {
+            BallsBalls.game.state.start('GameOver');
+        }
     }
 
 };
