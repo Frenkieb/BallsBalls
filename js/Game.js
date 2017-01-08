@@ -10,8 +10,8 @@ BallsBalls.Game.prototype = {
         this.player.collideWorldBounds = true;
 
         // Create player animations.
-        this.player.animations.add('default', [0], 10, true)
-        this.player.animations.add('shield', [1], 10, true)
+        this.player.animations.add('default', [0], 10, true);
+        this.player.animations.add('shield', [1, 2], 10, true);
 
         // Add physics to player.
         this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
@@ -42,7 +42,9 @@ BallsBalls.Game.prototype = {
         this.game.physics.arcade.collide(this.balls, this.player, this.ballPlayerCollision, null, {this:this, game:this.game, shield:this.shield});
 
         // Default animation.
-        this.player.animations.play('default');
+        if (!this.game.cursors.up.isDown && !this.game.cursors.down.isDown && !this.game.cursors.left.isDown && !this.game.cursors.right.isDown && !this.game.spaceKey.isDown ) {
+            this.player.animations.play('default');
+        }
 
         if (this.game.cursors.up.isDown) {
             this.player.y -= 4;
@@ -61,6 +63,7 @@ BallsBalls.Game.prototype = {
             if (this.shield > 0) {
                 this.shield -= 1;
                 this.shieldText.text = this.shield;
+
                 this.player.animations.play('shield');
             }
         }
@@ -95,6 +98,11 @@ BallsBalls.Game.prototype = {
         if (!this.game.spaceKey.isDown || this.shield == 0) {
             BallsBalls.game.state.start('GameOver');
         }
-    }
+    },
+    render: function() {
+        //this.game.debug.text(this.player.frame, 32, 32);
+        //this.game.debug.body(player);
+
+}
 
 };
