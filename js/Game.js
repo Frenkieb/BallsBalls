@@ -30,16 +30,26 @@ BallsBalls.Game.prototype = {
         this.ballsInGame = 0;
         this.worldBounces = 0;
         this.shield = 100;
+        this.score = 0;
 
         // Add shield indicator.
-        this.shieldText = this.game.add.text(10, 10, this.shield, { font: "15px Arial", fill: "#ffffff" });
+        this.shieldText = this.game.add.text(10, 10, 'Shield: ' + this.shield, { font: "15px Arial", fill: "#ffffff" });
+
+        // Add score indicator.
+        this.scoreText = this.game.add.text(10, 40, 'Score: ' + this.score, { font: "15px Arial", fill: "#ffffff" });
 
         // Add the first ball
         this.addBall(this.game.world.randomX, this.game.world.randomY);
+
+        //  Create timer
+        this.timer = this.game.time.create(false);
+        this.timer.loop(1000, this.updateScore, this);
+        this.timer.start();
+
     },
     update: function(){
         // Collission between balls and player.
-        this.game.physics.arcade.collide(this.balls, this.player, this.ballPlayerCollision, null, {this:this, game:this.game, shield:this.shield});
+        this.game.physics.arcade.collide(this.balls, this.player, this.ballPlayerCollision, null, {this:this, game:this.game, shield:this.shield, score:this.score});
 
         // Default animation.
         if (!this.game.cursors.up.isDown && !this.game.cursors.down.isDown && !this.game.cursors.left.isDown && !this.game.cursors.right.isDown && !this.game.spaceKey.isDown ) {
@@ -62,7 +72,7 @@ BallsBalls.Game.prototype = {
             // Shield only available when > 0.
             if (this.shield > 0) {
                 this.shield -= 1;
-                this.shieldText.text = this.shield;
+                this.shieldText.text = 'Shield: ' + this.shield;
 
                 this.player.animations.play('shield');
             }
@@ -96,10 +106,19 @@ BallsBalls.Game.prototype = {
     ballPlayerCollision: function() {
         // Game over when: shield is not active, or shield active but empty.
         if (!this.game.spaceKey.isDown || this.shield == 0) {
+            // Set the score for the GameOver state.
+            BallsBalls.game.state.states['GameOver'].score = this.score;
+
+            // Activate the GameOver state.
             BallsBalls.game.state.start('GameOver');
         }
     },
+    updateScore: function() {
+        this.score++;
+        this.scoreText.text = 'Score: ' + this.score;
+    },
     render: function() {
+        //this.game.debug.text('Elapsed seconds: ' + this.game.time.totalElapsedSeconds(), 32, 32);
         //this.game.debug.text(this.player.frame, 32, 32);
         //this.game.debug.body(player);
 

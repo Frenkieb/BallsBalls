@@ -15,6 +15,15 @@ BallsBalls.MainMenu.prototype = {
         var t = this.game.add.text(this.game.width/2, this.game.height/2, text, style);
         t.anchor.set(0.5);
 
+        // Display current highscores.
+        var savedHighscores = parseInt(localStorage.getItem('ballsballshighscores'));
+        if ( savedHighscores ) {
+            var text = 'Current highscore: ' + savedHighscores;
+            var style = { font: "15px Arial", fill: "#fff", align: "center" };
+            var t = this.game.add.text(this.game.width/2, (this.game.height/2) + 50, text, style);
+            t.anchor.set(0.5);
+        }
+
         this.game.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     },
     update: function(){
