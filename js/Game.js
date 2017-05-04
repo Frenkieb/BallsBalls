@@ -36,7 +36,10 @@ BallsBalls.Game.prototype = {
         this.shieldText = this.game.add.text(10, 10, 'Shield: ' + this.shield, { font: "15px Arial", fill: "#ffffff" });
 
         // Add score indicator.
-        this.scoreText = this.game.add.text(10, 40, 'Score: ' + this.score, { font: "15px Arial", fill: "#ffffff" });
+        this.scoreText = this.game.add.text(10, 30, 'Score: ' + this.score, { font: "15px Arial", fill: "#ffffff" });
+
+        // Add number of balls in game indicator.
+        this.ballsInGameText = this.game.add.text(10, 50, '# Balls: ' + this.ballsInGame, { font: "15px Arial", fill: "#ffffff" });
 
         // Add the first ball
         this.addBall(this.game.world.randomX, this.game.world.randomY);
@@ -93,6 +96,7 @@ BallsBalls.Game.prototype = {
             ball.body.onWorldBounds.add(this.ballWorldBounce, this);
 
             this.ballsInGame += 1;
+            this.ballsInGameText.text = '# Balls: ' + this.ballsInGame;
         }
     },
     ballWorldBounce: function(object) {
